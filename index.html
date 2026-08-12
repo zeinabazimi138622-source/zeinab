@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/jpg" href="photo_2026-06-17_12-30-39.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نسترن</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap');
+        * { 
+            font-family: 'Vazirmatn', 'Tahoma', sans-serif; 
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #fce4ec 0%, #f3d4d4 50%, #d4a8a8 100%);
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .main-container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        .card-main {
+            background: rgba(255, 248, 245, 0.93);
+            backdrop-filter: blur(8px);
+            border: 2px solid #d4a8a8;
+            border-radius: 35px;
+            padding: 30px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 40px rgba(139, 69, 19, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        .card-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(139, 69, 19, 0.18);
+        }
+
+        .divider-line {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #d32f2f, #8d6e63);
+            margin: 12px auto;
+            border-radius: 10px;
+        }
+
+        /* ===== علایق (حالت لپ‌تاپ) ===== */
+        .hobby-item {
+            display: inline-block;
+            background: #f6e5e5e5;
+            border: 2px solid #ef9a9a;
+            border-radius: 30px;
+            padding: 12px 28px;
+            margin: 6px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #4e342e;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+
+        .hobby-item .emoji {
+            font-size: 55px;
+            display: block;
+            margin-bottom: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .hobby-item .label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #4e342e;
+        }
+
+        .hobby-item:hover {
+            transform: scale(1.1) rotate(-9deg);
+            background: #ffcdd2;
+            border-color: #c62828;
+            box-shadow: 28px 40px  20px rgba(198, 40, 40, 0.25);
+        }
+
+        .hobby-item:hover .emoji {
+            transform: scale(1.8) rotate(15deg);
+        }
+        
+
+        /* ===== ضدعلایق (حالت لپ‌تاپ) ===== */
+        .dislike-item {
+            display: inline-block;
+            background: #f4eded;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 25px;
+            padding: 10px 20px;
+            margin: 4px;
+            font-size: 0.9rem;
+            color: #757575;
+            transition: all 0.8s cubic-bezier(0.9, 1, 0.5, 5);
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        }
+
+        .dislike-item:hover {
+            transform: scale(1.1) translateX(2px);
+            background: #ffebee;
+            border-color: #ef9a9a;
+            color: #c62828;
+            box-shadow: 0 22px 12px rgba(198, 40, 40, 0.2);
+        }
+
+        /* ===== باکس کامنت ===== */
+        .comment-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+
+        .comment-popup.active {
+            display: flex;
+        }
+
+        .comment-box {
+            background: #fff8f5;
+            border-radius: 35px;
+            padding: 35px 30px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid #d4a8a8;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .comment-box .close-btn {
+            position: sticky;
+            top: 0;
+            float: left;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            z-index: 10;
+        }
+
+        .comment-box .close-btn:hover {
+            color: #c62828;
+            transform: rotate(90deg);
+        }
+
+        .comment-box .comment-emoji {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .comment-box .comment-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #b71c1c;
+            margin-bottom: 10px;
+        }
+
+        .comment-box .comment-text {
+            font-size: 1.05rem;
+            color: #4e342e;
+            line-height: 2.2;
+            padding: 10px 0;
+            text-align: justify;
+        }
+
+        .comment-box .comment-divider {
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #d32f2f, #8d6e63);
+            margin: 10px auto;
+            border-radius: 10px;
+        }
+
+        .comment-box .comment-type {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .hobby-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .hobby-grid .hobby-item {
+            flex: 0 0 auto;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .dislike-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px 10px;
+        }
+
+        .note-text {
+            font-size: 0.95rem;
+            color: #795548;
+            background: #fff0ed;
+            padding: 8px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            border: 1px dashed #ef9a9a;
+        }
+
+        .signature-name {
+            font-size: 22px;
+            font-weight: 900;
+            color: #b71c1c;
+            letter-spacing: 1px;
+        }
+
+        .btn-simple {
+            background: #c62828;
+            border: none;
+            padding: 12px 45px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.25);
+        }
+
+        .btn-simple:hover {
+            transform: scale(1.7);
+            background: #b71c1c;
+            color: white;
+        }
+
+        .support-box {
+            background: #fff5f7;
+            border-right: 5px solid #c62828;
+            padding: 25px 25px;
+            border-radius: 20px;
+            line-height: 2.6;
+            font-size: 1.05rem;
+            color: #3e2723;
+            text-align: center;
+        }
+
+        .highlight-red {
+            color: #c62828;
+            font-weight: 700;
+        }
+
+        .highlight-brown {
+            color: #5d4037;
+            font-weight: 700;
+        }
+
+        .message-box {
+            background: linear-gradient(135deg, #fff5f7, #fce4ec);
+            border: 2px solid #ef9a9a;
+            border-radius: 25px;
+            padding: 25px 30px;
+            text-align: center;
+            line-height: 2.6;
+            font-size: 1.1rem;
+            color: #4e342e;
+            box-shadow: inset 0 0 30px rgba(198, 40, 40, 0.04);
+            position: relative;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(12deg); }
+        }
+
+        .wave-icon {
+            display: inline-block;
+            animation: wave 2s infinite ease-in-out;
+        }
+
+        /* ============================================================= */
+        /* ===== فقط برای گوشی (کوچک‌تر از 576px) ===== */
+        /* ============================================================= */
+        @media (max-width: 576px) {
+            body {
+                padding: 18px 10px;
+            }
+
+            .main-container {
+                padding: 0 6px;
+            }
+
+            .card-main {
+                padding: 22px 18px;
+                border-radius: 25px;
+                margin-bottom: 18px;
+            }
+
+            .divider-line {
+                width: 60px;
+            }
+
+            /* ===== علایق در گوشی - هر ردیف ۲ تا ===== */
+            .hobby-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                justify-items: center;
+                padding: 0 5px;
+            }
+
+            .hobby-grid .hobby-item {
+                width: 100%;
+                min-width: unset;
+                padding: 14px 10px;
+                margin: 0;
+                font-size: 1.05rem;
+                border-radius: 25px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .hobby-item .emoji {
+                font-size: 48px;
+                margin-bottom: 4px;
+            }
+
+            .hobby-item .label {
+                font-size: 0.85rem;
+            }
+
+            /* ===== ضدعلایق در گوشی ===== */
+            .dislike-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                padding: 5px 0;
+            }
+
+            .dislike-item {
+                font-size: 0.8rem;
+                padding: 8px 10px;
+                margin: 0;
+                border-radius: 20px;
+                text-align: center;
+                width: 100%;
+            }
+
+            /* باکس کامنت در گوشی */
+            .comment-box {
+                padding: 25px 20px;
+                border-radius: 28px;
+                max-width: 95%;
+            }
+
+            .comment-box .comment-emoji {
+                font-size: 48px;
+            }
+
+            .comment-box .comment-title {
+                font-size: 1.1rem;
+            }
+
+            .comment-box .comment-text {
+                font-size: 0.95rem;
+                line-height: 2.1;
+            }
+
+            .comment-box .close-btn {
+                font-size: 24px;
+            }
+
+            /* بقیه */
+            .support-box {
+                font-size: 0.95rem;
+                padding: 20px 18px;
+                line-height: 2.3;
+            }
+
+            .message-box {
+                font-size: 1rem;
+                padding: 20px 18px;
+                line-height: 2.3;
+            }
+
+            .note-text {
+                font-size: 0.85rem;
+                padding: 7px 16px;
+            }
+
+            .signature-name {
+                font-size: 20px;
+            }
+
+            .btn-simple {
+                padding: 11px 38px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ===== برای گوشی‌های خیلی کوچک (کمتر از 380px) ===== */
+        @media (max-width: 380px) {
+            .hobby-grid {
+                gap: 8px;
+            }
+
+            .hobby-grid .hobby-item {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+                border-radius: 20px;
+            }
+
+            .hobby-item .emoji {
+                font-size: 38px;
+            }
+
+            .hobby-item .label {
+                font-size: 0.75rem;
+            }
+
+            .dislike-grid {
+                gap: 5px;
+            }
+
+            .dislike-item {
+                font-size: 0.7rem;
+                padding: 6px 8px;
+                border-radius: 16px;
+            }
+
+            .card-main {
+                padding: 16px 12px;
+                border-radius: 20px;
+                margin-bottom: 14px;
+            }
+
+            .comment-box {
+                padding: 20px 16px;
+            }
+
+            .comment-box .comment-emoji {
+                font-size: 38px;
+            }
+
+            .comment-box .comment-text {
+                font-size: 0.85rem;
+            }
+
+            .support-box {
+                font-size: 0.85rem;
+                padding: 16px 14px;
+            }
+
+            .message-box {
+                font-size: 0.85rem;
+                padding: 16px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!-- ========== کارت اول ========== -->
+        <div class="card-main text-center">
+            <div class="divider-line"></div>
+            <p style="font-size: 1.3rem; color: #4e342e; line-height: 2.2; font-weight: 400;">
+                چون بهت قول داده بودم
+                <br><strong style="color: #b71c1c; font-size: 1.5rem;">اولین سایتم</strong> رو برای تو بنویسم.
+            </p>
+            <p style="color: #795548; font-size: 1.1rem; margin-top: 10px;">
+                <span style="font-weight: 700; color: #b71c1c;">«دورت بگردم»</span>
+            </p>
+        </div>
+
+        <!-- ========== کارت دوم: علایق ========== -->
+        <div class="card-main">
+            <h4 style="color: #b71c1c; text-align: center; font-weight: 900; font-size: 1.6rem;">
+                چیزایی که دوست داری
+            </h4>
+            <div class="divider-line"></div>
+            <div class="hobby-grid">
+                <span class="hobby-item" data-comment="h1"><span class="emoji">🍲</span><span class="label">فسنجون</span></span>
+                <span class="hobby-item" data-comment="h2"><span class="emoji">🍈</span><span class="label">آب طالبی</span></span>
+                <span class="hobby-item" data-comment="h3"><span class="emoji">🌍</span><span class="label">کره زمین</span></span>
+                <span class="hobby-item" data-comment="h4"><span class="emoji">🛩️</span><span class="label">مهماندار</span></span>
+                <span class="hobby-item" data-comment="h5"><span class="emoji">🌙</span><span class="label">ماه و بالکن</span></span>
+                <span class="hobby-item" data-comment="h6"><span class="emoji">🌹</span><span class="label">گل رز</span></span>
+                <span class="hobby-item" data-comment="h7"><span class="emoji">🌻</span><span class="label">آفتابگردون</span></span>
+                <span class="hobby-item" data-comment="h8"><span class="emoji">🌸</span><span class="label">گل عروس</span></span>
+                <span class="hobby-item" data-comment="h9"><span class="emoji">🍇</span><span class="label">آبغوره</span></span>
+                <span class="hobby-item" data-comment="h10"><span class="emoji">🐞</span><span class="label">کفشدوزک</span></span>
+                <span class="hobby-item" data-comment="h11"><span class="emoji">🍳</span><span class="label">کوکو</span></span>
+                <span class="hobby-item" data-comment="h12"><span class="emoji">🎵</span><span class="label">ابی و منصور</span></span>
+                <span class="hobby-item" data-comment="h13"><span class="emoji">🌍</span><span class="label">زبان خارجی</span></span>
+                <span class="hobby-item" data-comment="h14"><span class="emoji">📜</span><span class="label">شعر</span></span>
+                <span class="hobby-item" data-comment="h15"><span class="emoji">✨</span><span class="label">طلا</span></span>
+                <span class="hobby-item" data-comment="h16"><span class="emoji">🧸</span><span class="label">عروسک</span></span>
+                <span class="hobby-item" data-comment="h17"><span class="emoji">🐢</span><span class="label">لاکپشت</span></span>
+                <span class="hobby-item" data-comment="h18"><span class="emoji">🍩</span><span class="label">بامیه</span></span>
+                <span class="hobby-item" data-comment="h19"><span class="emoji">🧅</span><span class="label">پیاز</span></span>
+                <span class="hobby-item" data-comment="h20"><span class="emoji">🪷</span><span class="label">نیلوفر ابی</span></span>
+                <span class="hobby-item" data-comment="h21"><span class="emoji">🌽</span><span class="label">ذرت مکزیکی</span></span>
+            </div>
+            <br>
+            <p class="note-text text-center">💭 می‌دونم خیلی بیشتره... اینا رو که یادم موند</p>
+        </div>
+
+        <!-- ========== کارت سوم: ضدعلایق ========== -->
+        <div class="card-main" style="border-color: #bdbdbd; background: rgba(255,255,255,0.85);">
+            <h6 style="color: #757575; text-align: center; font-weight: 700; font-size: 1rem;">
+                چیزایی که ازشون خوشت نمیاد
+            </h6>
+            <div class="dislike-grid">
+                <span class="dislike-item" data-comment="d1">⚫⚪ سیاه و سفید</span>
+                <span class="dislike-item" data-comment="d2">🧂 نمک زیاد</span>
+                <span class="dislike-item" data-comment="d3">🥤 نوشابه</span>
+                <span class="dislike-item" data-comment="d4">🟠 نارنجی</span>
+                <span class="dislike-item" data-comment="d5">🗣️ دروغ</span>
+                <span class="dislike-item" data-comment="d6">🍦 خامه</span>
+                <span class="dislike-item" data-comment="d7">⚖️ مقایسه</span>
+                <span class="dislike-item" data-comment="d8">🌱 گیاه</span>
+                <span class="dislike-item" data-comment="d9">⏳ صبر زیاد</span>
+                <span class="dislike-item" data-comment="d10">🍟 چیپس</span>
+                <span class="dislike-item" data-comment="d11">🐱 گربه</span>
+                <span class="dislike-item" data-comment="d12">🍖 آبگوشت</span>
+                <span class="dislike-item" data-comment="d13">🤝 شوخی دستی</span>
+                <span class="dislike-item" data-comment="d14">💰 قرض دادن</span>
+                <span class="dislike-item" data-comment="d15">🎂 فراموشی تولد</span>
+                <span class="dislike-item" data-comment="d16">📤 پس‌گرفتن هدیه</span>
+            </div>
+            <p style="text-align: center; color: #9b9696; font-size: 0.85rem; margin-top: 8px;">
+             الان اینا رو یادمه
+            </p>
+            
+        </div>
+
+        <!-- ========== کارت چهارم ========== -->
+        <div class="card-main">
+            <h5 style="color: #b71c1c; text-align: center; font-weight: 700; font-size: 1.1rem;">
+                یه چیزی که بدونیش خوبه...
+            </h5>
+            <div class="divider-line"></div>
+            <div class="message-box">
+                <span style="font-size: 45px; display: block; margin-bottom: 8px;">🌊</span>
+                <p>
+                    اگه یه روزی نبودم، 
+                    <br>یا <span class="highlight-red">گربه</span> میشم، یا <span class="highlight-brown">کفشدوزک</span>.
+                    <br>همون‌طور که داری راه می‌ری،
+                    <br>یه گوشه‌ای می‌شینم و نگاهت می‌کنم.
+                    <br><br>
+                    <span style="font-size: 1.3rem;">🔄</span>
+                    <br>
+                    <span class="highlight-red">به اندازه‌ی صدای خوردن سنگ‌های دم دریا</span>
+                    <br><span class="highlight-brown">دوستت دارم</span>.
+                    <br>
+                    <span style="font-size: 0.9rem; color: #795548;">
+                        (این صدا جزو صداهایی‌ست که به شدت بهم آرامش میده و دوسش دارم)
+                    </span>
+                </p>
+                <div style="margin-top: 20px;">
+                    <span class="wave-icon">🌊</span>
+                    <span class="wave-icon" style="animation-delay: 0.1s;">🐞</span>
+                    <span class="wave-icon" style="animation-delay: 0.001s;">🐱</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== کارت پنجم: حمایت ========== -->
+        <div class="card-main">
+            <div class="divider-line"></div>
+            <div class="support-box">
+                <p style="line-height: 2.6;">
+                    هر وقت حالت خوب نبود، 
+                    <br><span class="highlight-brown">خواهرانه رو من حساب کن</span>.
+                    <br>فارغ از هر شرایطی.
+                    <br><br>
+                    همیشه می‌تونم برای تو تایم داشته باشم.
+                    <br>به بداخلاقی و غر غرام زیاد توجه نکن،
+                    <br>بعدش می‌فهمم چی گفتم، همیشه ناراحت می‌شم.
+                    <br><br>
+                    گفتم یه یادگاری ازم داشته باشی.
+                    <br>راستی اون <span class="highlight-red">ابری</span> که بهم دادی رو خیلی دوست دارم.
+                    <br><br>
+                    دوست داشتم برای تولدت بدم بهت،
+                    <br>خیلی شرایطش اوکی نشد.
+                    <br>الان گفتم هر جوری شده تمومش کنم.
+                    <br><br>
+                    <span style="background: #fce4ec; padding: 4px 25px; border-radius: 30px; display: inline-block; border: 1px solid #ef9a9a;">
+                        💭 خیلی ذهن خلاقی ندارم، نمی‌دونستم چجوری درستش کنم که قشنگ بشه...
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <!-- ========== کارت ششم: آخر ========== -->
+        <div class="card-main text-center">
+            <span style="font-size: 45px;">💕</span>
+            <p style="font-size: 1.3rem; color: #4e342e; font-weight: 700; line-height: 2.2; margin-top: 10px;">
+                عین یه خواهر دوستت دارم.
+                <br><span style="color: #795548; font-size: 1.05rem; font-weight: 400;">
+                    هر جا و هر وقت، کنارتم.
+                </span>
+            </p>
+
+            <a href="#" class="btn-simple mt-2" id="surpriseBtn">
+                برای همیشه
+            </a>
+
+            <div class="divider-line mt-4"></div>
+
+            <p class="signature-name">
+                از: دمنوش‌چیِ زنگ تفریح‌های کلاس یازدهم
+            </p>
+            <p style="color: #795548; font-size: 0.85rem;" id="dateDisplay">📅 1405.3.28</p>
+            
+        </div>
+
+    </div>
+
+    <!-- ===== کامنت‌ها (پاپ‌آپ) ===== -->
+    <div class="comment-popup" id="commentPopup">
+        <div class="comment-box">
+            <button class="close-btn" onclick="closeComment()">✕</button>
+            <span class="comment-emoji" id="commentEmoji">🌹</span>
+            <div class="comment-divider"></div>
+            <div class="comment-title" id="commentTitle">عنوان</div>
+            <div class="comment-type" id="commentType">✨ علاقه</div>
+            <div class="comment-text" id="commentText">متن کامنت</div>
+        </div>
+    </div>
+
+    <script>
+        // ===== تاریخ =====
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('dateDisplay').innerHTML =
+            '📅 ' + now.toLocaleDateString('fa-IR', options);
+
+        // ===== دکمه =====
+        document.getElementById('surpriseBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('💕 فارغ از هر شرایطی.\n\n' +
+                  '💕 عین یه خواهر دوستت دارم.\n\n' +
+                  'همیشه کنارتم.\n\n\n'+
+                  '1405.3.28'
+                );
+        });
+
+        // ===== کامنت‌های علایق =====
+        const hobbyComments = {
+            'h1': { emoji: '🍲', title: 'فسنجون', text: 'من هنوز درست نکردم ولی هر بار که مامان درست میکرد تا توی زنگ تفریح بخوریم، با ذوق وایمیستادم تعریف کنی. انقدر عشق میکردم به بقیه میگفتی.' },
+            'h2': { emoji: '🍈', title: 'آب طالبی', text: 'من اینو خیلی دوست ندارم. توی تابستون میچسبه! از اونجایی یادمه که فکر کنم دفع اول یا دومی که رفتیم بیرون تو گفتی چی بخوریم من گفتم دوست ندارم خیلی اب میوه تو چی دوست داری گفتی طالبی تو طالبی خوردی ' },
+            'h3': { emoji: '🌍', title: 'کره زمین', text: 'سفر دور دنیا رو دوست داری. ایتالیا، توی ایرانم تبریز. فکر کنم شیراز بود؟' },
+            'h4': { emoji: '🛩️', title: 'مهماندار هواپیما', text: 'اینم چون سفر دور دنیا رو دوست داری!' },
+            'h5': { emoji: '🌙', title: 'ماه و بالکن', text: 'اینو یاد شبایی میوفتم که توی پانسیون نگاه میکردیم. اونجا گفتی خیلی ماه دوست داری. منم عین همیشه ساز مخالف زدم گفتم نه من خورشید رو دوست دارم، ماه نورشو از خورشید میگیره و... ولی از اون موقع ماه رو منم دوست دارم. کلا میبینم یاد تو میوفتم. مخصوصاً ماه کامل، همون ماه شب ۱۴. بالکنم دوست داری خونه ت بالکن داشته باشه ' },
+            'h6': { emoji: '🌹', title: 'گل رز', text: 'رز هلندی قرمز خیلی دوست داری. البته اولش به من گفتی آفتابگردون دوست داری!' },
+            'h7': { emoji: '🌻', title: 'آفتابگردون', text: 'اینو من خیلی دوست نداشتم. از وقتی تو دوست داشتی منم دوست داشتم. تو دوست داری چون فلسفه‌اش باحاله. آفتابگردون همیشه سمت نور خورشیده.' },
+            'h8': { emoji: '🌸', title: 'گل عروس', text: 'این که گل کوچولو! منم خیلی دوسش دارم. جدیییی!' },
+            'h9': { emoji: '🍇', title: 'آبغوره', text: 'اینو گفتی چجوری یادت بود؟ یه روز خونه‌مون داشتم سالاد درست میکردم، گفتم آبغوره یا لیمو؟ خیلی محکم گفتی معلومه آبغوره! برای همین یادم مونده.' },
+            'h10': { emoji: '🐞', title: 'کفشدوزک', text: 'اینو من یه کم میترسم ولی گوگولیه. با اینکه حشره‌ست ولی قشنگه. رو گلها!' },
+            'h11': { emoji: '🍳', title: 'کوکو', text: 'اینو خیلی نخوردی. برات جالبه!' },
+            'h12': { emoji: '🎵', title: 'ابی و منصور و داریوش', text: 'ابی رو که بچه بودی همه‌ی آهنگاشو حفظ بودی. حتی اونایی که معروف نیستن. اون دوتای دیگه رو هم دوست داری. کلا توی آهنگ بیشتر به متن توجه میکنی، تو من بیشتر به ریتم. برای همینم سلیقه‌مون فرق میکنه.' },
+            'h13': { emoji: '🌍', title: 'زبان خارجی', text: 'اینم که نگفته پیداست! فرانسه، آلمانی، ترکی و... ماشاااالله!' },
+            'h14': { emoji: '📜', title: 'شعر', text: 'اینو خیلی دوست داری. یه کم تند میخونی، حفظشونم نمیکنی خیلی. ولی اونایی که دوستداری رو یه جا یادداشت میکنی.' },
+            'h15': { emoji: '✨', title: 'طلا', text: 'کلا طلا دوست داری. ظریفم نه، قشنگ! طلاا!' },
+            'h16': { emoji: '🧸', title: 'عروسک', text: 'هم هدیه گرفتن عروسک رو خیلی دوست داری، هم اینکه باهاش میخوابی. البته کس زیادی بهت عروسک نمیده. راستی عروسک مستربین که همیشه به این اسم صدا میکردیم... خیلی فکر کردم اسمش چیه، اسمش تدی بود! ولی اینکه موقع صدا کردن به جای اسم نسبتش رو با یکی دیگه میگن باحاله. مثلاً دوست‌های دور من به جای نسترن میگن "اون رفیقت یا موقع تعریف کردن که میگن اون رفیق زینب رو خیلی دوست دارم".' } ,
+            'h17': { emoji: '🐢', title: 'لاکپشت', text: 'اینو چون تو بچگیت خاله ت تو ماشین عروسکشو داشت خاطره خوبی داری ازش ' } ,
+            'h18': { emoji: '🍩', title: 'بامیه', text:'اینو منم دوست دارم ولی بعضی موقع ها میگی بخوریم میگم نه چون کلش زیاده برام بنظرم ' } ,
+            'h19': { emoji: '🧅', title: 'پیاز', text:'اینو پیازداغ تو غذا دوست داری با اینکه زیر زبون بیاد هم فکر کنم مشکلی نداری' } ,
+            'h20': { emoji: '🪷', title: 'نیلوفر ابی', text:'این گل جدیدس که زیاد شده ببین هر پست وو هرچی میبنم لایکت زیرشه یعنی'} ,
+            'h21': { emoji: '🌽', title: 'ذرت مکزیکی', text:'اینو توش میتونم یه کم شک داشته باشم ولی اون سری هوس کرده بودی ی بار دیگه م گفتی دوست داری حالا امیدوارم دوست داشته باشی '} 
+        };
+    
+
+        // ===== کامنت‌های ضدعلایق =====
+        const dislikeComments = {
+            'd1': { emoji: '⚫⚪', title: 'سیاه و سفید', text: 'البته منظور من ترکیب سیاه و سفید بود!' },
+            'd2': { emoji: '🧂', title: 'نمک زیاد', text: 'کلا نمک زیاد نمیخری. روی یه کم نمکی دوست داری!' },
+            'd3': { emoji: '🥤', title: 'نوشابه', text: 'اینو خیلی جدی عجیبه! من خیلی دوست دارم مثلاً الان که دارم میگم دلم خواست. حالا جدا از این، تو دلستر رو اوکی تری!' },
+            'd4': { emoji: '🟠', title: 'نارنجی', text: 'اینو منم خدایی دوست ندارم خیلی!' },
+            'd5': { emoji: '🗣️', title: 'دروغ', text: 'اینو منم دوست ندارم. معمولاً هم خدایی نمیگی اصلاً!' },
+            'd6': { emoji: '🍦', title: 'خامه', text: 'ببین نمیدونم چرا خیلی خامه دوست نداری. اینو درست یادمه دیگه... اره؟ اشتباه میکنم بگو!' },
+            'd7': { emoji: '⚖️', title: 'مقایسه', text: 'کلا مقایسه کردن رو دوست نداری. انگار من اینو وقتی ناراحت میشم زیاد انجام میدم. باور کن من تو رو با بقیه مقایسه نمیکنم، بقیه رو شاید با تو بکنم. من حسمو وقتی ناراحتم میگم، این برداشت مقایسه و منت میشه ولی اینجوری نیست. البته دارم سعی میکنم نگم دیگه، حالا ایشالا موفق بوده باشم.' },
+            'd8': { emoji: '🌱', title: 'گیاه (نگهداریش سخته)', text: 'نه که دوست نداشته باشی، خیلی خوب نمیتونی نگهداری کنی. یه بار خریدی گل، من گفتم اینا زود خراب میشه، ناراحت شدی و چند روز بعدش واقعاً خراب شد. برای همین برات گیاه گرفتم. اونجا گفتی برای همین یادم مونده.' },
+            'd9': { emoji: '⏳', title: 'صبر کردن زیاد', text: 'کلا صبر زیاد رو دوست نداری. منم ماشالا همیشه دیر میکنم. البته ۵ دقیقه تا ۱۰ دقیقه. خدایی که اونم همیشه من میرسم بعد زنگ میزنم که بیای که منتظر نمونی دیگه. تنها راهی که تو رو منتظر نذارم همین بود. خدایی زود رسیدن خودم نمیدونم چرا نمیشه، همش!' },
+            'd10': { emoji: '🍟', title: 'چیپس', text: 'اینو یازدهم خریدم، نخوردی. هرچی گفتم منم نخوردم دادم یکی دیگه خورد. تنها نمیتونستم بخورم که از اونجا یادمه.' },
+            'd11': { emoji: '🐱', title: 'گربه', text: 'اینم که اصلاً نیاز نیست بگم از کجا میدونم! دیگه کل تایم ناهارا یه دور جیغ میزدم... (دلم انگار تنگ شد)' },
+            'd12': { emoji: '🍖', title: 'آبگوشت', text: 'اینم خیلی دوست نداری. البته همه چیز میخوری، خیلی مشتاق نیستی فقط.' },
+            'd13': { emoji: '🤝', title: 'شوخی دستی', text: 'اینم که یه بار دهم پات خواب رفته بود کردم، داشتی میزدی منو. اونجا متوجه شدم که اصلاً دوست نداری.' },
+            'd14': { emoji: '💰', title: 'قرض دادن', text: 'کلا دوست نداری وسایلتو قرض بدی. از اینکه یادشون بره پس بدن، متنفری.' },
+            'd15': { emoji: '🎂', title: 'فراموش کردن تولد', text: 'تولد خیلی برات مهمه. کلا!' },
+            'd16': { emoji: '📤', title: 'پس گرفتن هدیه', text: 'حتی اگه دوستی‌تون هم تموم بشه یا طرف بگه خب نصف نصف، دوست نداری. میگی من کادو رو دادم، پس نمیگیرم.' }
+        };
+
+        // ===== کلیک روی علایق =====
+        document.querySelectorAll('.hobby-item[data-comment]').forEach(item => {
+            item.addEventListener('click', function() {
+                const key = this.getAttribute('data-comment');
+                const comment = hobbyComments[key];
+                if (comment) {
+                    document.getElementById('commentEmoji').textContent = comment.emoji;
+                    document.getElementById('commentTitle').textContent = comment.title;
+                    document.getElementById('commentType').textContent = '✨ علاقه';
+                    document.getElementById('commentText').textContent = comment.text;
+                    document.getElementById('commentPopup').classList.add('active');
+                }
+            });
+        });
+
+        // ===== کلیک روی ضدعلایق =====
+        document.querySelectorAll('.dislike-item[data-comment]').forEach(item => {
+            item.addEventListener('click', function() {
+                const key = this.getAttribute('data-comment');
+                const comment = dislikeComments[key];
+                if (comment) {
+                    document.getElementById('commentEmoji').textContent = comment.emoji;
+                    document.getElementById('commentTitle').textContent = comment.title;
+                    document.getElementById('commentType').textContent = '🌱 ضدعلاقه';
+                    document.getElementById('commentText').textContent = comment.text;
+                    document.getElementById('commentPopup').classList.add('active');
+                }
+            });
+        });
+
+        // ===== بستن کامنت =====
+        function closeComment() {
+            document.getElementById('commentPopup').classList.remove('active');
+        }
+
+        document.getElementById('commentPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeComment();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeComment();
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
